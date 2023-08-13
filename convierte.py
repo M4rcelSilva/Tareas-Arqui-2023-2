@@ -6,7 +6,8 @@ def InvertirString(Cadena):
         largo -= 1
     return retorno
 
-def HelpBinary(num):
+def decimal_a_binario(num):
+    #print("Transformacion de numero decimal a binario : "  + str(num))
     salidaAux = ""
     cociente = int(num)
     resto = 0
@@ -14,27 +15,41 @@ def HelpBinary(num):
         resto = cociente % 2
         salidaAux += str(resto)
         cociente = cociente // 2
+        #print(salidaAux)
     salida = InvertirString(salidaAux)
+    #print("numero de salida: " + salida)
+    #continuar = input()
     return salida
 
 def MantraHelp(Bin):
     aux = Bin
-    while(len(aux) != 23 ):
-        aux += "0"
+    if len(aux) >= 23:
+        return aux
+    else:
+        while(len(aux) != 23 ):
+            #print(aux)
+            aux += "0"
     return aux
 
-def DecimalBinary(num):
+def fraccion_a_binario(num):
+    #print("Transformacion de fraccion a binario : " + num)
     nom = "0." + num 
+    #print(nom)
 
     salida = ""
     decimal = float(nom)
     entero = 0
     while(decimal != 0):
+        if len(salida) >= 23:
+            break 
         aux  = decimal * 2
         entero = int(aux)      #transforma el resultado de la multiplicacion en entero para quedarte con el numero
         salida += str(entero)     #suma la parte entera a la salida
-        decimal = aux - int(aux)    #resta el auxiliar al entero
-    
+        decimal = aux - int(aux) 
+        #print(salida)       #resta el auxiliar al entero
+
+    #print(salida)
+    #continuar = input()
     return salida
 
 def ToBinary(Number):
@@ -53,24 +68,34 @@ def ToBinary(Number):
         act += 1
 
     act += 1
+    
 
-    while(act < len(Number)):
-        print(Number[act])       #copia la parte decimal a NumDecimal
+    while(act < len(Number)):       #copia la parte decimal a NumDecimal
         NumDecimal +=  Number[act]
         act += 1
-    decimalBinary = DecimalBinary(NumDecimal)
-    NumEnteroBinary = HelpBinary(NumEntero)
-    E = len(NumEnteroBinary) + 127 - 1
-    EBinary = HelpBinary(E)
+    '''
+    print("Signo : " + BinStr)
+    print("Parte entera : " + NumEntero)
+    print("Parte decimal:  "+NumDecimal)
+    continuar = input()
+    '''
+
+    enteroBinario = decimal_a_binario(NumEntero)
+    fraccionBinario = fraccion_a_binario(NumDecimal)
+
+    E = len(enteroBinario) + 127 - 1
+    EBinary = decimal_a_binario(E)
     BinStr += EBinary
-    mantra = NumEnteroBinary[1:] + decimalBinary
+    mantra = enteroBinario[1:] + fraccionBinario
+    #print("mantisa : " + mantra)
     mantra = MantraHelp(mantra)
     BinStr += mantra
+    BinStr = BinStr[:32]
     return BinStr   #devuelve un string
 
 
 
-#######################################################################3
+
 
 def sumaHelp(bin1 , bin2):
     suma = ''
@@ -154,14 +179,15 @@ def sumaFloatingPoint(fpA , fpB):
 
     mantisa = sumaHelp(mantisaA,mantisaB)
     mantisa = mantisa[2:]
-
+    exponente = decimal_a_binario(127 + expA)
+    '''
     print('signo:' + signo)
     print('exponente:' + str(expA))
-    exponente = HelpBinary(127 + expA)
     print('exponente sesgado: '+ exponente)
     print('mantisa :' + mantisa)
-
+    '''
     resultado = signo + exponente + mantisa
+    resultado = resultado[:32]
 
     return resultado
 
